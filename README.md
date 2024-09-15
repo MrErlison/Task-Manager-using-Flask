@@ -10,12 +10,12 @@
 
 ### Etapa 3: Criação de um pipeline CI/CD
 
-- [ ] Compilação: O código deve ser automaticamente compilado a cada commit para assegurar a consistência do ambiente.
-- [ ] Testes Automatizados: Realizar os Testes unitários, de integração e funcionais são executados.
+- [x] Compilação: O código deve ser automaticamente compilado a cada commit para assegurar a consistência do ambiente.
+- [/] Testes Automatizados: Realizar os Testes unitários, de integração e funcionais são executados.
 
 ### Etapa 4: Análise Estática de Código
 
-- [ ] Análise Estática de Código: uso do Bandit para analisar o código em busca de vulnerabilidades.
+- [x] Análise Estática de Código: uso do Bandit para analisar o código em busca de vulnerabilidades.
 - [ ] Análise de Dependência: uso do Owasp Dependency-check
 
 ### Etapa 5: Análise Dinâmica de Segurança (DAST)
