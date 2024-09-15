@@ -2,7 +2,7 @@ services:
   task:
     build: .
     ports:
-      - "5001:5000"
+      - "5000:5000"
     volumes:
       - task_volume:/app
     environment:
