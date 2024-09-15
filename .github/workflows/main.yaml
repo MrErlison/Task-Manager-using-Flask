@@ -6,6 +6,7 @@ on:
 
 permissions:
   issues: write
+  contents: write
   pull-requests: write
 
 jobs:
@@ -88,40 +89,47 @@ jobs:
   #         name: Dependency-Check report
   #         path: ${{github.workspace}}/reports
 
-  zap_proxy:
-    # needs: 
-    #   - bandit
-    #   - dependency_check
-    name: DAST - ZAP Proxy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+  # zap_proxy:
+  #   needs: 
+  #     - bandit
+  #     - dependency_check
+  #   name: DAST - ZAP Proxy
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
 
-      - name: Build Docker image
-        run: docker build -t task-image .
+  #     - name: Build Docker image
+  #       run: docker build -t task-image .
 
-      - name: Run application
-        run: |
-          docker run -d -p 5000:5000 --name task-manager task-image
-          sleep 10
+  #     - name: Run application
+  #       run: |
+  #         docker run -d -p 5000:5000 --name task-manager task-image
+  #         sleep 10
 
-      - name: Zap Scan
-        uses: zaproxy/action-full-scan@v0.10.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          target: "http://localhost:5000"
+  #     - name: Zap Scan
+  #       uses: zaproxy/action-full-scan@v0.10.0
+  #       with:
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         target: "http://localhost:5000"
 
   create_pull_request:
-    needs: zap_proxy
+    # needs: zap_proxy
+    needs: build
     name: CD - PR on staging
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Create Pull Request
-        uses: actions/create-pull-request@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          head-ref: development
-          base-ref: staging
-          title: "Pull Request from Development to Staging"
-          body: "This pull request merges changes from the development branch to the staging branch."
+          fetch-depth: 0
+      - name: Run the Action
+        if: startsWith(github.ref, 'refs/heads/feature')
+        uses: devops-infra/action-pull-request@v0.5.5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          title: Automatic pull request
+          #body: ${{ github.event.commits[0].message }}
+          assignee: ${{ github.actor }}
+          label: automatic
+          get_diff: true
