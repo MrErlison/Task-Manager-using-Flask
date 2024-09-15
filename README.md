@@ -1,37 +1,30 @@
-# Task-Manager-using-Flask
+# Hackers do Bem - Fase DevSecOps
 
-A simple web application to store your To-Do Tasks .
+## Estudo de Caso
 
-# Features
+### Etapa 2: Desenvolvimento do Sistema
 
-- User Authentication
-- Easy to use and deploy locally.
+- Task-Manager-using-Flask é uma simples aplicação web para armazenar tarefas todo. O projeto orifinal pode ser acessado clicando [aqui](https://github.com/AdityaBagad/Task-Manager-using-Flask)
 
-# Requirements
+- [x] Para executar a aplicação é necessário ter o Docker instalado, em seguida execute `docker compose up -d` na linha de comando.
 
-Execute the following command to install the required third party libraries:
+### Etapa 3: Criação de um pipeline CI/CD
 
-```pip3 install -r requirements.txt```
+- [ ] Compilação: O código deve ser automaticamente compilado a cada commit para assegurar a consistência do ambiente.
+- [ ] Testes Automatizados: Realizar os Testes unitários, de integração e funcionais são executados.
 
-# Usage
+### Etapa 4: Análise Estática de Código
 
-1. Clone the repository using the following command
-    
-    ```git clone https://github.com/AdityaBagad/Task-Manager-using-Flask.git```
+- [ ] Análise Estática de Código: uso do Bandit para analisar o código em busca de vulnerabilidades.
+- [ ] Análise de Dependência: uso do Owasp Dependency-check
 
-2. Install the dependencies using
+### Etapa 5: Análise Dinâmica de Segurança (DAST)
 
-    ```cd  Task-Manager-using-Flask```
-    
-    ```pip3 install -r requirements.txt```
+- [ ] uso do OAWSP ZAP Proxy
 
-3. Run this command to start the application
+### Etapa 6: Entrega Contínua (CD)
 
-    ```cd todo_project```
-
-    ```python run.py```
-
-# Results
+- [ ] Deploy em staging para posterior aprovação, o código é implantado no ambiente de stage para simular a produção.
 
 ## Registration Page
 Login or Register if you dont have an account
