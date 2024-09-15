@@ -33,3 +33,51 @@ jobs:
             
       - name: Run tests
         run: PYTHONPATH=$PYTHONPATH:. pytest
+
+  # Análise Estática de Código: bandit
+  static_bandit:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    steps:
+      - name: Bandit Analysis
+        uses: PyCQA/bandit-action@v1
+
+  # Análise de Dependência: uso do Owasp Dependency-check
+  static_dependency_check:
+    needs: build
+    runs-on: ubuntu-latest
+    name: Dependency-Check
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Check
+        uses: dependency-check/Dependency-Check_Action@main
+        id: Dependency-Check
+        with:
+          project: "Task-Manager-using-Flask"
+          path: "."
+          format: "HTML"
+          out: "reports"
+          args: >
+            --scan "**/*.py"
+            --scan "requirements.txt"
+            --failOnCVSS 7
+            --enableRetired
+
+      - name: Upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: Dependency-Check report
+          path: ${{github.workspace}}/reports
