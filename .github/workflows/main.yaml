@@ -10,7 +10,7 @@ permissions:
 jobs:
 
   build:
-    name: Compilacao
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,7 +20,7 @@ jobs:
 
   test:
     needs: build
-    name: Testes
+    name: Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -108,13 +108,8 @@ jobs:
       - name: Zap Scan
         uses: zaproxy/action-full-scan@v0.10.0
         with:
+          token: ${{ secrets.ACCESS_TOKEN }}
           target: "http://localhost:5000"
-
-      - name: Upload results
-        uses: actions/upload-artifact@v4
-        with:
-          name: ZAP Report
-          path: zap_report.html
 
   create_pull_request:
     needs: zap_proxy
