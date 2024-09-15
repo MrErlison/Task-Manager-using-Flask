@@ -82,10 +82,10 @@ jobs:
             --enableRetired
 
       - name: Upload results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Dependency-Check report
-          path: ${{github.workspace}}/dep_reports
+          path: ${{github.workspace}}/reports
 
   zap_proxy:
     needs: 
@@ -111,10 +111,10 @@ jobs:
           target: "http://localhost:5000"
 
       - name: Upload results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: ZAP Report
-          path: ${{github.workspace}}/zap_reports/
+          path: ${{github.workspace}}/reports/zap_report.html
 
   create_pull_request:
     needs: zap_proxy
