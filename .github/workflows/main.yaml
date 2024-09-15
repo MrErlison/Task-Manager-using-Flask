@@ -5,6 +5,7 @@ on:
     branches: ["development"]
 
 permissions:
+  issues: write
   pull-requests: write
 
 jobs:
@@ -113,7 +114,7 @@ jobs:
 
   create_pull_request:
     needs: zap_proxy
-    name: Create Pull Request
+    name: CD - PR on staging
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
