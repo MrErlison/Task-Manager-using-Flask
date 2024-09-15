@@ -1,0 +1,17 @@
+name: HdB
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the Docker image
+        # date +%s ==> seconds since the Epoch (1970-01-01 00:00 UTC)
+        run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+
