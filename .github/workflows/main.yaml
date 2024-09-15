@@ -49,7 +49,7 @@ jobs:
         uses: PyCQA/bandit-action@v1
 
   dependency_check:
-    needs: bandit
+    needs: test
     name: SAST - OWASP Dependency-check
     runs-on: ubuntu-latest
     steps:
@@ -84,8 +84,10 @@ jobs:
           name: Dependency-Check report
           path: ${{github.workspace}}/reports
 
-  zap_test:
-    needs: test
+  zap_proxy:
+    needs: 
+      - bandit
+      - dependency_check
     name: DAST - OAWSP ZAP Proxy
     runs-on: ubuntu-latest
     steps:
@@ -106,6 +108,7 @@ jobs:
           target: "http://localhost:5000"
 
   delivery_continuous:
+    needs: zap_proxy
     name: Entrega Contínua - Push to staging
     runs-on: ubuntu-latest
     steps:
