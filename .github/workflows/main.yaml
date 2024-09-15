@@ -30,4 +30,4 @@ jobs:
         run: python -m pip install pytest Flask-Testing
             
       - name: Run tests
-        run: PYTHONPATH=$PYTHONPATH:/app pytest
+        run: PYTHONPATH=$PYTHONPATH:. pytest
