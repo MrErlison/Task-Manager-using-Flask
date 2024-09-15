@@ -17,6 +17,7 @@ jobs:
 
   test:
     needs: build
+    name: Unit tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -35,21 +36,24 @@ jobs:
         run: PYTHONPATH=$PYTHONPATH:. pytest
 
   # Análise Estática de Código: bandit
-  static_bandit:
+  bandit:
+    needs: test
+    name: Bandit
     runs-on: ubuntu-latest
     permissions:
       security-events: write
       actions: read
       contents: read
+      
     steps:
       - name: Bandit Analysis
         uses: PyCQA/bandit-action@v1
 
   # Análise de Dependência: uso do Owasp Dependency-check
-  static_dependency_check:
-    needs: build
+  dependency_check:
+    needs: bandit
+    name: OWASP Dependency-check
     runs-on: ubuntu-latest
-    name: Dependency-Check
     steps:
       - name: Checkout
         uses: actions/checkout@v4

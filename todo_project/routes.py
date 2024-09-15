@@ -27,7 +27,7 @@ def error_500(error):
 
 
 @app.route("/")
-@app.route("/abouts")
+@app.route("/about")
 def about():
     return render_template('about.html', title='About')
 
