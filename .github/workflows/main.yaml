@@ -82,7 +82,7 @@ jobs:
             --enableRetired
 
       - name: Upload results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Dependency-Check report
           path: ${{github.workspace}}/dep_reports
@@ -111,7 +111,7 @@ jobs:
           target: "http://localhost:5000"
 
       - name: Upload results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ZAP Report
           path: ${{github.workspace}}/zap_reports/
