@@ -27,7 +27,7 @@ jobs:
           python-version: "3.9"
       
       - name: Install dependencies
-        run: python -m pip install pytest Flask-Testing SQLAlchemy flask_sqlalchemy
+        run: python -m pip install pytest Flask-Testing SQLAlchemy flask_sqlalchemy flask_login
             
       - name: Run tests
         run: PYTHONPATH=$PYTHONPATH:. pytest
