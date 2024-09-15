@@ -16,15 +16,15 @@
 ### Etapa 4: Análise Estática de Código
 
 - [x] Análise Estática de Código: uso do Bandit para analisar o código em busca de vulnerabilidades.
-- [ ] Análise de Dependência: uso do Owasp Dependency-check
+- [x] Análise de Dependência: uso do Owasp Dependency-check
 
 ### Etapa 5: Análise Dinâmica de Segurança (DAST)
 
-- [ ] uso do OAWSP ZAP Proxy
+- [x] uso do OAWSP ZAP Proxy
 
 ### Etapa 6: Entrega Contínua (CD)
 
-- [ ] Deploy em staging para posterior aprovação, o código é implantado no ambiente de stage para simular a produção.
+- [x] Deploy em staging para posterior aprovação, o código é implantado no ambiente de stage para simular a produção.
 
 ## Registration Page
 Login or Register if you dont have an account
