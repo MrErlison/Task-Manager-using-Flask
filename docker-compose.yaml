@@ -1,0 +1,13 @@
+version: '3'
+services:
+  task:
+    build: .
+    ports:
+      - "5001:5000"
+    volumes:
+      - web_volume:/app
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+volumes:
+  web_volume:
