@@ -3,21 +3,21 @@ name: HdB
 on:
   push:
     branches: ["development"]
-  pull_request:
-    branches: ["development"]
 
 jobs:
+
   build:
+    name: Compilacao
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Build the Docker image
         # date +%s ==> seconds since the Epoch (1970-01-01 00:00 UTC)
-        run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+        run: docker build . --file Dockerfile --tag $(date +%s)
 
   test:
     needs: build
-    name: Unit tests
+    name: Testes Automatizados
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -35,24 +35,22 @@ jobs:
       - name: Run tests
         run: PYTHONPATH=$PYTHONPATH:. pytest
 
-  # Análise Estática de Código: bandit
   bandit:
     needs: test
-    name: Bandit
+    name: SAST - Bandit
     runs-on: ubuntu-latest
     permissions:
       security-events: write
       actions: read
       contents: read
-      
+
     steps:
       - name: Bandit Analysis
-        uses: PyCQA/bandit-action@v1
+        uses: PyCQA/bandit-action@v4
 
-  # Análise de Dependência: uso do Owasp Dependency-check
   dependency_check:
     needs: bandit
-    name: OWASP Dependency-check
+    name: SAST - OWASP Dependency-check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -85,3 +83,34 @@ jobs:
         with:
           name: Dependency-Check report
           path: ${{github.workspace}}/reports
+
+  zap_test:
+    needs: test
+    name: DAST - OAWSP ZAP Proxy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build -t flask-app .
+
+      - name: Run Flask app in Docker
+        run: |
+          docker run -d -p 5000:5000 --name flask-container flask-app
+          sleep 10
+
+      - name: ZAP Scan
+        uses: zaproxy/action-full-scan@v0.10.0
+        with:
+          target: "http://localhost:5000"
+
+      - name: Upload ZAP Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: ZAP Report
+          path: zap_report.html
+
+      - name: Stop Docker container
+        if: always()
+        run: docker stop flask-container
