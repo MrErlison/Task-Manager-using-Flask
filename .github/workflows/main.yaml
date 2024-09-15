@@ -4,6 +4,9 @@ on:
   push:
     branches: ["development"]
 
+permissions:
+  pull-requests: write
+
 jobs:
 
   build:
@@ -17,7 +20,7 @@ jobs:
 
   test:
     needs: build
-    name: Testes Automatizados
+    name: Testes
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -50,7 +53,7 @@ jobs:
 
   dependency_check:
     needs: test
-    name: SAST - OWASP Dependency-check
+    name: SAST - Dependency-check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -79,16 +82,16 @@ jobs:
             --enableRetired
 
       - name: Upload results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v2
         with:
           name: Dependency-Check report
-          path: ${{github.workspace}}/reports
+          path: ${{github.workspace}}/dep_reports
 
   zap_proxy:
     needs: 
       - bandit
       - dependency_check
-    name: DAST - OAWSP ZAP Proxy
+    name: DAST - ZAP Proxy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -107,11 +110,21 @@ jobs:
         with:
           target: "http://localhost:5000"
 
-  delivery_continuous:
+      - name: Upload results
+        uses: actions/upload-artifact@v2
+        with:
+          name: ZAP Report
+          path: ${{github.workspace}}/zap_reports/
+
+  create-pull-request:
     needs: zap_proxy
-    name: Entrega Contínua - Push to staging
+    name: Delivery to staging
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: git fetch origin master
-      - run: git push origin HEAD:staging
+      - uses: repo-sync/pull-request@v3
+      - name: pull-request
+        with:
+          destination_branch: "staging"
+        run: |
+          gh_pr_up() { gh pr create $* || gh pr edit $* }
+          gh_pr_up --title "My pull request" --body "Description"
